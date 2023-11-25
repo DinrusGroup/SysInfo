@@ -13,13 +13,13 @@ using namespace Upp;
 #define IMAGECLASS Images
 #include <Draw/iml.h>
 #define LAYOUTFILE <examples/SysInfo_demo_gui/SysInfo_demo_gui.lay>
-	
-	
-GUI_APP_MAIN { 
+
+
+GUI_APP_MAIN {
 	SysInfoDemo program;
-	
+
 	SetLanguage(LNGC_('E','N','U','S', CHARSET_UTF8));
-    
+
 	program.Run();
 }
 
@@ -36,14 +36,14 @@ void SpecialFolders::Fill() {
 	TextTemp = GetTempFolder();
 	TextOs = GetOsFolder();
 	TextSystem = GetSystemFolder();
-	
-	DefaultExes.Reset();	
+
+	DefaultExes.Reset();
 	DefaultExes.AddColumn("Extension", 5);
 	DefaultExes.AddColumn("Program", 40);
 	const char *ext[] = {".html", ".doc", ".png", ".pdf", ".txt", ".xyz", ""};
-	for (int i = 0; *ext[i] != 0; ++i) 
+	for (int i = 0; *ext[i] != 0; ++i)
 		DefaultExes.Add(ext[i], GetExtExecutable(ext[i]));
-#if defined(PLATFORM_WIN32)	
+#if defined(PLATFORM_WIN32)
 	ButInstalledSoftware.WhenPush = THISBACK(ButInstalledSoftware_Push);
 #else
 	SoftwareInstalled.Enable(false);
@@ -52,10 +52,10 @@ void SpecialFolders::Fill() {
 }
 
 void SpecialFolders::ButInstalledSoftware_Push() {
-#if defined(PLATFORM_WIN32) 	
+#if defined(PLATFORM_WIN32)
 	ButInstalledSoftware.SetLabel("Getting list ...");
 	ButInstalledSoftware.ProcessEvents();
-	SoftwareInstalled.Reset();	
+	SoftwareInstalled.Reset();
 	SoftwareInstalled.AddColumn("Name", 60);
 	SoftwareInstalled.AddColumn("Version", 15);
 	SoftwareInstalled.AddColumn("Vendor", 30);
@@ -66,7 +66,7 @@ void SpecialFolders::ButInstalledSoftware_Push() {
 	SoftwareInstalled.AddColumn("Path", 10);
 	Array <Value> name, version, vendor, caption, installDate, description, state, path;
 	if (GetPackagesInfo(name, version, vendor, installDate, caption, description, state, path)) {
-		for (int i = 0; i < name.GetCount(); ++i) 
+		for (int i = 0; i < name.GetCount(); ++i)
 			SoftwareInstalled.Add(name[i], version[i], vendor[i], installDate[i], caption[i], description[i], state[i], path[i]);
 	}
 	ButInstalledSoftware.SetLabel("Get installed software list");
@@ -78,7 +78,7 @@ void SystemInfo::Fill() {
 	Date releaseDate;
 	int numberOfProcessors;
 	GetSystemInfo(manufacturer, productName, version, numberOfProcessors, mbSerial);
-	
+
 	TextManufacturer = manufacturer;
 	TextProductName = productName;
 	TextVersion = version;
@@ -102,7 +102,7 @@ void SystemInfo::Fill() {
 	TextBiosVersion = biosVersion;
 	TextBiosRelease = AsString(biosReleaseDate);
 	TextBiosSerial = biosSerial;
-	
+
 	String kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion;
 	if (GetOsInfo(kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion)) {
 		TextKernel = kernel;
@@ -121,7 +121,7 @@ void SystemInfo::Fill() {
 		TextIp4 = ip4;
 		TextIp6 = ip6;
 	}
-	
+
 	int memoryLoad;
 	uint64 totalPhys, freePhys, totalPageFile, freePageFile, totalVirtual, freeVirtual;
 	if (GetMemoryInfo(memoryLoad, totalPhys, freePhys, totalPageFile, freePageFile, totalVirtual, freeVirtual)) {
@@ -129,7 +129,7 @@ void SystemInfo::Fill() {
 		TextMemTotPhysicalbytes = Format64(totalPhys);
 		TextMemTotPhysical = BytesToString(totalPhys);
 		TextMemFreePhysicalbytes = Format64(freePhys);
-		TextMemFreePhysical = BytesToString(freePhys);			
+		TextMemFreePhysical = BytesToString(freePhys);
 		TextMemTotPagingbytes = Format64(totalPageFile);
 		TextMemTotPaging = BytesToString(totalPageFile);
 		TextMemFreePagingbytes = Format64(freePageFile);
@@ -145,23 +145,23 @@ void SystemInfo::Fill() {
 	GetCompilerInfo(compiler, compilerVersion, tim, mode, bits);
 	TextCompiler = compiler;
 	TextCompilerVersion = FormatInt(compilerVersion);
-	TextCompilationDate = Format(tim);	
+	TextCompilationDate = Format(tim);
 	TextCompilationMode = mode;
 	TextCompilationBits = FormatInt(bits);
-	
+
 	Processors.Reset();
 	Processors.AddColumn("Processor", 6);
 	Processors.AddColumn("Vendor", 12);
 	Processors.AddColumn("Identifier", 40);
 	Processors.AddColumn("Architecture", 30);
 	Processors.AddColumn("Speed MHz", 10);
-	String vendor, identifier, architecture; 
+	String vendor, identifier, architecture;
 	int speed;
 	for (int i = 0; i < numberOfProcessors; ++i) {
-		GetProcessorInfo(i, vendor, identifier, architecture, speed);		
-		Processors.Add(Format("#%d", i), vendor, identifier, architecture, FormatInt(speed));	
+		GetProcessorInfo(i, vendor, identifier, architecture, speed);
+		Processors.Add(Format("#%d", i), vendor, identifier, architecture, FormatInt(speed));
 	}
-#if defined(PLATFORM_WIN32) 	
+#if defined(PLATFORM_WIN32)
 	Video.Reset();
 	Video.AddColumn("Name", 10);
 	Video.AddColumn("Description", 10);
@@ -176,7 +176,7 @@ void SystemInfo::Fill() {
 		Video.Add("Video data not accesible");
 #else
 	Video.Enable(false);
-#endif	
+#endif
 	Drives.Reset();
 	Drives.AddColumn("Path", 10);
 	Drives.AddColumn("Type", 10);
@@ -184,7 +184,7 @@ void SystemInfo::Fill() {
 	Drives.AddColumn("Max name", 5);
 	Drives.AddColumn("File System", 5);
 	Drives.AddColumn("Total User bytes", 10);
-	Drives.AddColumn("Total User", 6);	
+	Drives.AddColumn("Total User", 6);
 	Drives.AddColumn("Free User bytes", 10);
 	Drives.AddColumn("Free User", 6);
 	Drives.AddColumn("Total Free bytes", 10);
@@ -208,15 +208,15 @@ void SystemInfo::Fill() {
 				row.Add("Installed but no access to drive");
 			else {
 				row.Add(Format64(totalBytesUser));
-				row.Add(BytesToString(totalBytesUser));				
+				row.Add(BytesToString(totalBytesUser));
 				row.Add(Format64(freeBytesUser));
 				row.Add(BytesToString(freeBytesUser));
 				row.Add(Format64(totalFreeBytes));
 				row.Add(BytesToString(totalFreeBytes));
 			}
 		} else
-			row.Add("Not mounted"); 
-		
+			row.Add("Not mounted");
+
 		Drives.Add(row);
 	}
 	Adapters.Reset();
@@ -226,9 +226,9 @@ void SystemInfo::Fill() {
 	Adapters.AddColumn("MAC", 10);
 	Adapters.AddColumn("IP4", 10);
 	Adapters.AddColumn("IP6", 10);
-	Array <NetAdapter> adapters = GetAdapterInfo();	
-	for (int i = 0; i < adapters.GetCount(); ++i) 
-		Adapters.Add(adapters[i].type, adapters[i].description, adapters[i].fullname, 
+	Array <NetAdapter> adapters = GetAdapterInfo();
+	for (int i = 0; i < adapters.GetCount(); ++i)
+		Adapters.Add(adapters[i].type, adapters[i].description, adapters[i].fullname,
 				   adapters[i].mac, adapters[i].ip4, adapters[i].ip6);
 	ButUpdate.WhenPush = THISBACK(ButUpdate_Push);
 }
@@ -251,7 +251,7 @@ struct SOptDropGrid: public DropGrid {
 	int64 hwnd;
 	ArrayOption option;
 	typedef SOptDropGrid CLASSNAME;
-	
+
 	SOptDropGrid() {
 		hwnd = 0;
 		ClearButton();
@@ -267,37 +267,37 @@ struct SOptDropGrid: public DropGrid {
 		//SetData("-- Regular styles --");
 		Ready(false);
 		StaticText *st;
-		Add(0, 0, 0); 
-		st = new StaticText; 
-		*st= "-- click me --"; 
-		*st <<= THISBACK(Action); 
-		GetList().SetCtrl(0, 0, st); 
+		Add(0, 0, 0);
+		st = new StaticText;
+		*st= "-- click me --";
+		*st <<= THISBACK(Action);
+		GetList().SetCtrl(0, 0, st);
 		++row;
-		Add(0, 0, 0); 
-		st = new StaticText; 
-		*st = "-- Regular styles --"; 
-		GetList().SetCtrl(1, 0, st); 
+		Add(0, 0, 0);
+		st = new StaticText;
+		*st = "-- Regular styles --";
+		GetList().SetCtrl(1, 0, st);
 		++row;
 		Option *po;
 		for(int i = 0; i < sizeof(styles)/sizeof(styles[0]); ++i, row++) {
-			po = new Option; 
-			po->Set((stylesbits[i]&GetWindowLong((HWND)hwnd, GWL_STYLE) ? true : false)); 
-			po->SetLabel(styles[i]); 
+			po = new Option;
+			po->Set((stylesbits[i]&GetWindowLong((HWND)hwnd, GWL_STYLE) ? true : false));
+			po->SetLabel(styles[i]);
 			*po <<= THISBACK(Action);
 			Add(po->Get(), ::Format("0x%08x", (int64)stylesbits[i]), *(int64*)&stylesbits[i]);
 			GetList().SetCtrl(row, 0, po);
 		}
-		Add(0, 0); 
-		st = new StaticText; 
-		*st = "** Extendes styles **"; 
-		GetList().SetCtrl(row, 0, st); 
+		Add(0, 0);
+		st = new StaticText;
+		*st = "** Extendes styles **";
+		GetList().SetCtrl(row, 0, st);
 		++row;
 		for(int i = 0; i < sizeof(exstyles)/sizeof(exstyles[0]); row++, ++i){
-			po = new Option; 
-			po->Set((stylesbits[i]&GetWindowLong((HWND)hwnd,GWL_EXSTYLE)) ? true : false); 
-			po->SetLabel(exstyles[i]);  
-			*po <<= THISBACK(Action); 
-			Add(po->Get(), ::Format("0x%08x", (int64)exstylesbits[i]), *(int64*)&exstylesbits[i]); 
+			po = new Option;
+			po->Set((stylesbits[i]&GetWindowLong((HWND)hwnd,GWL_EXSTYLE)) ? true : false);
+			po->SetLabel(exstyles[i]);
+			*po <<= THISBACK(Action);
+			Add(po->Get(), ::Format("0x%08x", (int64)exstylesbits[i]), *(int64*)&exstylesbits[i]);
 			GetList().SetCtrl(row, 0, po);
 		}
 		Ready(true);
@@ -309,21 +309,21 @@ struct SOptDropGrid: public DropGrid {
 		int rowind = GetCurrentRow();
 		uint64 bit = (int64)Get(2);
 		if(bit == 0) {
-			TopWindow tw; 
-			tw.Title("~~~~~"); 
+			TopWindow tw;
+			tw.Title("~~~~~");
 			Image img = Images::hat;
 			ImageCtrl ic;
-			ic.SetImage(img).SetRect(0, 0, img.GetWidth(), img.GetHeight()); 
-			tw.Add(ic); 
-			tw.SetRect(::GetMousePos().x - 20, GetMousePos().y - 20, img.GetWidth(), img.GetHeight()); 
-			tw.RunAppModal(); 
+			ic.SetImage(img).SetRect(0, 0, img.GetWidth(), img.GetHeight());
+			tw.Add(ic);
+			tw.SetRect(::GetMousePos().x - 20, GetMousePos().y - 20, img.GetWidth(), img.GetHeight());
+			tw.RunAppModal();
 			return;
 		}
 		bool on = ((Option*)GetList().GetCtrl(0))->Get() == 1;
 		uint64 bits = GetWindowLong((HWND)hwnd, (rowind>3+sizeof(stylesbits)/sizeof(stylesbits[0])) ? GWL_EXSTYLE : GWL_STYLE);
 		if(on)
 			SetBit(bits, bit);
-		else  
+		else
 			ClearBit(bits, bit);
 		SetWindowLong((HWND)hwnd, (rowind > 3 + sizeof(stylesbits)/sizeof(stylesbits[0])) ? GWL_EXSTYLE : GWL_STYLE, (LONG)bits);
 		RedrawWindow(GetDesktopWindow(), 0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN|RDW_FRAME|RDW_ERASE);
@@ -360,7 +360,7 @@ void WindowsList_::Fill() {
 	}
 	Windows.SetEditable();
 	ButUpdate.WhenPush = THISBACK(ButUpdate_Push);
-	#if defined(PLATFORM_WIN32)	
+	#if defined(PLATFORM_WIN32)
 	ButTopmost.WhenPush = THISBACK(ButTopmost_Push);
 	#else
 	ButTopmost.Disable();
@@ -371,7 +371,7 @@ void WindowsList_::Fill() {
 	Windows.WhenBar = THISBACK(MenuCallback);
 }
 
-#if defined(PLATFORM_WIN32)	
+#if defined(PLATFORM_WIN32)
 void WindowsList_::ButTopmost_Push() {
 	int row = Windows.GetCursor();
 	if (row < 0)
@@ -409,7 +409,7 @@ void ProcessList::Fill() {
 	Process.AddColumn("Priority", 6);
 	Process.AddColumn("Program", 12);
 	Array<int64> pidL;
-	pidL.Clear(); 
+	pidL.Clear();
 	Array<String> pNames;
 	if (!GetProcessList(pidL, pNames))
 		Process.Add("Error getting process info");
@@ -428,7 +428,7 @@ void ProcessList::ButUpdate_Push() {
 void ScreenGrabTab::Fill() {
 	EditFileNameGrab <<= AppendFileNameX(GetDesktopFolder(), "ScreenGrab.avi");
 	EditTime <<= 5;
-	EditFrameRate <<= 1; 
+	EditFrameRate <<= 1;
 	OpGrabMouse <<= true;
 	SwGrabMode.Add("Desktop");
 	SwGrabMode.Add("Window");
@@ -444,7 +444,7 @@ void ScreenGrabTab::Fill() {
 	//EditTime.Enable(false);
 	//EditFrameRate.Enable(false);
 	//OpGrabMouse.Enable(false);
-	
+
 	String extension = "jpg";
 	EditFileNameSnap <<= AppendFileNameX(GetDesktopFolder(), "ScreenSnap." + extension);
 	ButSnap.WhenPush = THISBACK(ButSnap_Push);
@@ -477,15 +477,15 @@ void ScreenGrabTab::SwGrabMode_Action() {
 }
 
 void ScreenGrabTab::ButGrab_Push() {
-#if defined(PLATFORM_WIN32) 
+#if defined(PLATFORM_WIN32)
 	FileDelete(EditFileNameGrab.GetData().ToString());
-	
+
 	bool ret;
-	if (~SwGrabMode == 0) 
+	if (~SwGrabMode == 0)
 		ret = Record_Desktop(~EditFileNameGrab, EditTime, EditFrameRate, OpGrabMouse);
-	else if (~SwGrabMode == 1) 
+	else if (~SwGrabMode == 1)
 		ret = Record_Window(~EditFileNameGrab, EditTime, GetWindowIdFromCaption(~EditWindowTitle, false), EditFrameRate, OpGrabMouse);
-	else if (~SwGrabMode == 2) 
+	else if (~SwGrabMode == 2)
 		ret = Record_DesktopRectangle(~EditFileNameGrab, EditTime, EditLeft, EditTop, EditWidth, EditHeight, EditFrameRate, OpGrabMouse);
 	else
 		throw Exc("Unexpected value");
@@ -494,7 +494,7 @@ void ScreenGrabTab::ButGrab_Push() {
 #endif
 }
 
-void MouseKeyboard::Fill() { 
+void MouseKeyboard::Fill() {
 	OnTimer();
 #ifndef flagNO_XTEST
 	capsLock.WhenAction = THISBACK(OnButLock);
@@ -517,7 +517,7 @@ void MouseKeyboard::Fill() {
 
 void MouseKeyboard::OnTimer() {
 	bool caps, num, scroll;
-	
+
 	GetKeyLockStatus(caps, num, scroll);
 	capsLock <<= caps;
 	numLock <<= num;
@@ -531,7 +531,7 @@ void MouseKeyboard::OnRemoveAccents() {
 #ifndef flagNO_XTEST
 
 void MouseKeyboard::OnButLock() {
-	SetKeyLockStatus(~capsLock, ~numLock, ~scrollLock);	
+	SetKeyLockStatus(~capsLock, ~numLock, ~scrollLock);
 }
 
 void MouseKeyboard::OnButKey() {
@@ -547,7 +547,7 @@ void MouseKeyboard::OnButKey() {
 		}
 		if (windowId != -1) {
 			Sleep(1000);
-			Mouse_SetPos(200, 200, windowId);			
+			Mouse_SetPos(200, 200, windowId);
 			Mouse_LeftClick();
     		Keyb_SendKeys("{HOME}This text is added by Keyb_SendKeys.\n");
     		Keyb_SendKeys("Some chars just for test: \\/:;,.ºª^[]{}´?¿~#@!¡\n");
@@ -561,7 +561,7 @@ void MouseKeyboard::OnButKey() {
 void MouseKeyboard::OnButMouse()
 {
 	uint64 wnd = GetWindowIdFromCaption("SysInfo", true);
-	
+
 	if (wnd == -1) {
 		Exclamation("Window not found");
 		return;
@@ -569,7 +569,7 @@ void MouseKeyboard::OnButMouse()
 	int left, top, right, bottom;
 	Window_GetRect(wnd, left, top, right, bottom);
 #ifdef PLATFORM_POSIX
-	top -= 10;	
+	top -= 10;
 #endif
 	Mouse_SetPos(left+100, top+5, 0);
 	Sleep(100);
@@ -600,15 +600,15 @@ void ScreenGrabTab::ButSnap_Push()
 {
 	FileDelete(EditFileNameSnap.GetData().ToString());
 
-	if (~SwGrabMode == 0) 
+	if (~SwGrabMode == 0)
 		Snap_Desktop(~EditFileNameSnap);
 	else if (~SwGrabMode == 1) {
 		int64 wId = GetWindowIdFromCaption(~EditWindowTitle, true);
 		if (wId == -1)
 			Exclamation("No window found named " + String(~EditWindowTitle));
-		else 
+		else
 			Snap_Window(~EditFileNameSnap, wId);
-	} else if (~SwGrabMode == 2) 
+	} else if (~SwGrabMode == 2)
 		Snap_DesktopRectangle(~EditFileNameSnap, ~EditLeft, ~EditTop, ~EditWidth, ~EditHeight);
 	else
 		throw Exc("Unexpected value");
@@ -619,25 +619,25 @@ SysInfoDemo::SysInfoDemo()
 	Title("SysInfo");
 	Icon(Images::Computer());
 	LargeIcon(Images::Computer());
-	
+
 	systemInfo.Fill();
-	filesTab.Add(systemInfo.SizePos(), "System Info");	
+	filesTab.Add(systemInfo.SizePos(), "System Info");
 	windowsList.Fill();
-	filesTab.Add(windowsList.SizePos(), "Windows list");	
+	filesTab.Add(windowsList.SizePos(), "Windows list");
 	processList.Fill();
-	filesTab.Add(processList.SizePos(), "Process list");	
+	filesTab.Add(processList.SizePos(), "Process list");
 	specialFolders.Fill();
-	filesTab.Add(specialFolders.SizePos(), "Special Folders/Executables/Installed Software");	
+	filesTab.Add(specialFolders.SizePos(), "Special Folders/Executables/Installed Software");
 	screenGrab.Fill();
-	filesTab.Add(screenGrab.SizePos(), "Screen Grab");	
+	filesTab.Add(screenGrab.SizePos(), "Screen Grab");
 	mouseKeyboard.Fill();
-	filesTab.Add(mouseKeyboard.SizePos(), "Mouse & Keyboard");	
-	
+	filesTab.Add(mouseKeyboard.SizePos(), "Mouse & Keyboard");
+
 	AddFrame(menu);
 	AddFrame(TopSeparatorFrame());
 	AddFrame(info);
 	Add(filesTab.SizePos());
-	
+
 	menu.Set(THISBACK(MainMenu));
 	menu.WhenHelp = info;
 
@@ -666,7 +666,7 @@ void SysInfoDemo::About()
 	Prompt("SysInfo demo gui", Images::Computer(), DeQtf("SysInfo package demo"), "Close");
 }
 
-void SysInfoDemo::Exit() 
+void SysInfoDemo::Exit()
 {
 	Break();
 }
