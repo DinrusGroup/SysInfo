@@ -4,15 +4,9 @@
 #define _CrashHandler_Crash_h_
 
 #include <Core/Core.h>
-//#include "SysInfo_in.h"
-
+#include "SysInfo_in.h"
 
 namespace Upp {
-
-#ifdef __GNUC__
-#define __cdecl __attribute__((__cdecl__))
-#endif
-
 
 class CrashHandler {
 public:
@@ -20,7 +14,7 @@ public:
     virtual ~CrashHandler() {};
 
 private:
-#if defined(PLATFORM_WIN32) 
+#if defined(PLATFORM_WIN32)
     static LONG WINAPI UnhandledHandler(EXCEPTION_POINTERS *p);
     static void __cdecl SEHHandler(unsigned u, EXCEPTION_POINTERS* p);
 #endif
@@ -29,11 +23,11 @@ private:
 #pragma GCC diagnostic ignored "-Wattributes"
 #endif
     static void __cdecl TerminateHandler();
-    //static void __cdecl UnexpectedHandler();
+    static void __cdecl UnexpectedHandler();
 
     static void __cdecl PureCallHandler();
 
-    static void __cdecl InvalidParameterHandler(const wchar_t* expression, 
+    static void __cdecl InvalidParameterHandler(const wchar_t* expression,
         const wchar_t* function, const wchar_t* file, unsigned int line, uintptr_t pReserved);
 
     static void __cdecl NewHandler();

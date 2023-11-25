@@ -11,43 +11,41 @@ namespace Upp {
 // Processor Info
 void GetSystemInfo(String &manufacturer, String &productName, String &version, int &numberOfProcessors, String &mbSerial);
 void GetBiosInfo(String &biosVersion, Date &biosReleaseDate, String &biosSerial);
-bool GetProcessorInfo(int number, String &vendor, String &identifier, String &architecture, int &speed);		
+bool GetProcessorInfo(int number, String &vendor, String &identifier, String &architecture, int &speed);
 int GetCpuSpeed();
 double GetCpuTemperature();
 
 struct NetAdapter : DeepCopyOption<NetAdapter> {
-	String description;
-	String fullname;
-	String dnsSuffix;
-	String mac;
-	String type;
-	String ip4, ip6;
-	String gatewayip4, gatewayip6;
-	bool connected;
-	
-	void Xmlize(XmlIO &xml);
-	void Jsonize(JsonIO &json);
-	void Serialize(Stream &stream);
-	void Copy(const NetAdapter& src);
-	NetAdapter(const NetAdapter& src, int) 	{Copy(src);}
-	//NetAdapter(const NetAdapter& src) 		{Copy(src);}
-	NetAdapter() {}
+    String description;
+    String fullname;
+    String dnsSuffix;
+    String mac;
+    String type;
+    String ip4, ip6;
+    String gatewayip4, gatewayip6;
+    bool connected;
+
+    void Xmlize(XmlIO &xml);
+    void Jsonize(JsonIO &json);
+    void Serialize(Stream &stream);
+    void Copy(const NetAdapter& src);
+    NetAdapter(const NetAdapter& src, int)  {Copy(src);}
+    //NetAdapter(const NetAdapter& src)         {Copy(src);}
+    NetAdapter() {}
 };
 
-Array<NetAdapter> GetAdapterInfo();
+Upp::Array <NetAdapter> GetAdapterInfo();
 
 bool GetNetworkInfo(String &name, String &domain, String &ip4, String &ip6);
 
 int GetAvailableSocketPort(int from = 49152);
 bool IsPortFree(int port);
 
-#if defined(PLATFORM_WIN32) 
-bool GetVideoInfo(Upp::Array <Value> &name, Upp::Array <Value> &description, Upp::Array <Value> &videoProcessor, 
-				  Upp::Array <Value> &ram, Upp::Array <Value> &videoMode);
-#ifdef DEPRECATED
-bool GetPackagesInfo(Upp::Array <Value> &name, Upp::Array <Value> &version, Upp::Array <Value> &vendor, 
-			Upp::Array <Value> &installDate, Upp::Array <Value> &caption, Upp::Array <Value> &description, Upp::Array <Value> &state, Upp::Array <Value> &path);
-#endif
+#if defined(PLATFORM_WIN32)
+bool GetVideoInfo(Upp::Array <Value> &name, Upp::Array <Value> &description, Upp::Array <Value> &videoProcessor,
+                  Upp::Array <Value> &ram, Upp::Array <Value> &videoMode);
+bool GetPackagesInfo(Upp::Array <Value> &name, Upp::Array <Value> &version, Upp::Array <Value> &vendor,
+            Upp::Array <Value> &installDate, Upp::Array <Value> &caption, Upp::Array <Value> &description, Upp::Array <Value> &state);
 #endif
 
 String GetHDSerial();
@@ -58,27 +56,27 @@ bool GetMemoryInfo(int &memoryLoad, uint64 &totalPhys, uint64 &freePhys, uint64 
 
 /////////////////////////////////////////////////////////////////////
 // Windows list
-// They get arrays with handles to all the opened windows with additional info as 
+// They get arrays with handles to all the opened windows with additional info as
 // pid: Handle to the process that manages the window
 // name: Window name
 // fileName: Window process program file name
 // title: Window title (caption)
-void GetWindowsList(Array<int64> &wid, Array<int64> &pid, Array<String> &name, 
-					Array<String> &fileName, Array<String> &title, bool getAll = true);
+void GetWindowsList(Array<int64> &wid, Array<int64> &pid, Array<String> &name,
+                    Array<String> &fileName, Array<String> &title, bool getAll = true);
 Array<int64> GetWindowsList();
 
 Rect GetDesktopRect();
-	
+
 bool Window_GetRect(int64 windowId, int &left, int &top, int &right, int &bottom);
 bool Window_SetRect(int64 windowId, int left, int top, int right, int bottom);
-#if defined(PLATFORM_WIN32) 
+#if defined(PLATFORM_WIN32)
 void Window_Bottom(int64 windowId);
 void Window_Top(int64 windowId);
 void Window_TopMost(int64 windowId);
 #endif
 
 enum WINDOW_STATUS {
-	WINDOW_MAXIMIZED, WINDOW_MINIMIZED, WINDOW_NORMAL};
+    WINDOW_MAXIMIZED, WINDOW_MINIMIZED, WINDOW_NORMAL};
 int Window_GetStatus(int64 windowId);
 
 /////////////////////////////////////////////////////////////////////
@@ -88,7 +86,7 @@ Array<int64> GetProcessList();
 String GetProcessName(int64 pid);
 String GetProcessFileName(int64 processID);
 
-#if defined(PLATFORM_WIN32) 
+#if defined(PLATFORM_WIN32)
 int GetProcessCPUUsage(int64 pid);
 #endif
 
@@ -122,10 +120,10 @@ int64 GetProcessId();
 bool Shutdown(String action);
 
 void GetCompilerInfoAux(String &name, int &version, Upp::Time &time, String &mode, int &bits, const char *sdate, const char *stime);
-#define GetCompilerInfo(name, version, time, mode, bits) 	GetCompilerInfoAux(name, version, time, mode, bits, __DATE__, __TIME__)
+#define GetCompilerInfo(name, version, time, mode, bits)    GetCompilerInfoAux(name, version, time, mode, bits, __DATE__, __TIME__)
 
 bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin);
-bool GetBatteryInfo(bool &present/*, int &designCapacity, int &lastFullCapacity, String &vendor, String &type, String &model, String &serial*/);	
+bool GetBatteryInfo(bool &present/*, int &designCapacity, int &lastFullCapacity, String &vendor, String &type, String &model, String &serial*/);
 
 bool OpenCDTray(String drive);
 bool CloseCDTray(String drive);
@@ -139,7 +137,7 @@ bool Mouse_SetPos(int x, int y, int64 windowId = 0);
 void Mouse_LeftClick();
 void Mouse_LeftDown();
 void Mouse_LeftUp();
-void Mouse_MiddleClick(); 
+void Mouse_MiddleClick();
 void Mouse_MiddleDown();
 void Mouse_MiddleUp();
 void Mouse_RightClick();
@@ -178,107 +176,107 @@ bool Record_Window(String fileName, int duration, int64 handle, double secsFrame
 void SetDesktopWallPaper(char *path);
 
 struct SystemSignature : DeepCopyOption<SystemSignature> {
-	String manufacturer, productName, version, mbSerial;
-	int numberOfProcessors;	
-	String hdSerial;
-	String userName;
-	Upp::Array <NetAdapter> netAdapters;
-	
-	void Load();
-	String ToString() const			{return StoreAsJson(*this, true);}
-	operator String() const			{return ToString();}
-	operator const char *() const	{return ToString();}
-	String operator~() const		{return ToString();}
-	void Copy(const SystemSignature& src);
-	SystemSignature(const SystemSignature& src, int) {Copy(src);}
-	SystemSignature()	{}
-	void Xmlize(XmlIO &xml);
-	void Jsonize(JsonIO &json);
-	void Serialize(Stream &stream);
-	bool operator==(const SystemSignature &other) const;
-	bool operator!=(const SystemSignature &other) const {return !(*this == other);}	
-	Vector<String> GetDiff(const SystemSignature &other) const;
+    String manufacturer, productName, version, mbSerial;
+    int numberOfProcessors;
+    String hdSerial;
+    String userName;
+    Upp::Array <NetAdapter> netAdapters;
+
+    void Load();
+    String ToString() const         {return StoreAsJson(*this, true);}
+    operator String() const         {return ToString();}
+    operator const char *() const   {return ToString();}
+    String operator~() const        {return ToString();}
+    void Copy(const SystemSignature& src);
+    SystemSignature(const SystemSignature& src, int) {Copy(src);}
+    SystemSignature()   {}
+    void Xmlize(XmlIO &xml);
+    void Jsonize(JsonIO &json);
+    void Serialize(Stream &stream);
+    bool operator==(const SystemSignature &other) const;
+    bool operator!=(const SystemSignature &other) const {return !(*this == other);}
+    Vector<String> GetDiff(const SystemSignature &other) const;
 };
 
 struct SystemOverview : DeepCopyOption<SystemOverview> {
-	SystemSignature signature;
-	String biosVersion, biosSerial;
-	Date biosReleaseDate;
-	String computerName;
-	String kernel;
-	String kerVersion;
-	String kerArchitecture;
-	String distro;
-	String distVersion;
-	String desktop;
-	String deskVersion;
-	String compilerName;
-	int compilerVersion;
-	Upp::Time compilerTime;
-	String compilerMode;
-	
-	void Load();
-	String ToString() const			{return StoreAsJson(*this, true);}
-	operator String() const			{return ToString();}
-	operator const char *() const	{return ToString();}
-	String operator~() const		{return ToString();}
-	void Copy(const SystemOverview& src);
-	SystemOverview(const SystemOverview& src, int) { Copy(src); }	
-	SystemOverview() {}
-	void Xmlize(XmlIO &xml);
-	void Jsonize(JsonIO &json);
-	void Serialize(Stream &stream);
+    SystemSignature signature;
+    String biosVersion, biosSerial;
+    Date biosReleaseDate;
+    String computerName;
+    String kernel;
+    String kerVersion;
+    String kerArchitecture;
+    String distro;
+    String distVersion;
+    String desktop;
+    String deskVersion;
+    String compilerName;
+    int compilerVersion;
+    Upp::Time compilerTime;
+    String compilerMode;
+
+    void Load();
+    String ToString() const         {return StoreAsJson(*this, true);}
+    operator String() const         {return ToString();}
+    operator const char *() const   {return ToString();}
+    String operator~() const        {return ToString();}
+    void Copy(const SystemOverview& src);
+    SystemOverview(const SystemOverview& src, int) { Copy(src); }
+    SystemOverview() {}
+    void Xmlize(XmlIO &xml);
+    void Jsonize(JsonIO &json);
+    void Serialize(Stream &stream);
 };
 
 #if defined(PLATFORM_WIN32) || !defined(flagNO_XTEST)
 
 class SimulateActivity {
 public:
-	SimulateActivity(int _deltaTime, 
-		int _fromH = Null, int _fromM = Null, int _toH = Null, int _toM = Null) : 
-		deltaTime(_deltaTime), fromH(_fromH), fromM(_fromM), toH(_toH), toM(_toM), rng(123987) {
-#if defined(PLATFORM_WIN32) 
-		if (::CreateMutex(0, true, "__msdxp__")) {
-			if (GetLastError() == ERROR_ALREADY_EXISTS) 
-				active = false;
-		}
+    SimulateActivity(int _deltaTime,
+        int _fromH = Null, int _fromM = Null, int _toH = Null, int _toM = Null) :
+        deltaTime(_deltaTime), fromH(_fromH), fromM(_fromM), toH(_toH), toM(_toM), rng(123987) {
+#if defined(PLATFORM_WIN32)
+        if (::CreateMutex(0, true, "__msdxp__")) {
+            if (GetLastError() == ERROR_ALREADY_EXISTS)
+                active = false;
+        }
 #endif
-		nextDeltaTime = deltaTime + std::uniform_int_distribution<int>(53*1000, 67*1000)(rng);
-	}
-	void DoActivity() {
-		if (!active)
-			return;
-		
-		Time tm = GetSysTime();
-		if (!IsNull(fromH) && (tm.hour > fromH && tm.minute > fromM) && (tm.hour < toH && tm.minute < toM))
-			return;
-		
-		int x, y;
-		Mouse_GetPos(x, y);
-		if (x != x0 && y != y0) {
-			timer.Reset();
-			x0 = x;
-			y0 = y;
-			nextDeltaTime = deltaTimeFast + std::uniform_int_distribution<int>(5*1000, 10*1000)(rng);
-		} else {
-			if (timer.Elapsed() > nextDeltaTime) {
-				Keyb_SendKeys("{INSERT}{INSERT}", 10);
-				timer.Reset();
-				std::uniform_int_distribution<int> rand1min(53*1000, 67*1000);	
-				nextDeltaTime = deltaTime + std::uniform_int_distribution<int>(53*1000, 67*1000)(rng);
-			}
-		}
-	}	
-	bool IsActive() {return active;}
-	
+        nextDeltaTime = deltaTime + std::uniform_int_distribution<int>(53*1000, 67*1000)(rng);
+    }
+    void DoActivity() {
+        if (!active)
+            return;
+
+        Time tm = GetSysTime();
+        if (!IsNull(fromH) && (tm.hour > fromH && tm.minute > fromM) && (tm.hour < toH && tm.minute < toM))
+            return;
+
+        int x, y;
+        Mouse_GetPos(x, y);
+        if (x != x0 && y != y0) {
+            timer.Reset();
+            x0 = x;
+            y0 = y;
+            nextDeltaTime = deltaTimeFast + std::uniform_int_distribution<int>(5*1000, 10*1000)(rng);
+        } else {
+            if (timer.Elapsed() > nextDeltaTime) {
+                Keyb_SendKeys("{INSERT}{INSERT}", 10);
+                timer.Reset();
+                std::uniform_int_distribution<int> rand1min(53*1000, 67*1000);
+                nextDeltaTime = deltaTime + std::uniform_int_distribution<int>(53*1000, 67*1000)(rng);
+            }
+        }
+    }
+    bool IsActive() {return active;}
+
 private:
-	TimeStop timer;
-	int x0 = -1, y0 = -1;
-	dword deltaTime, nextDeltaTime;
-	dword deltaTimeFast = 20*1000;
-	int fromH, fromM, toH, toM;
-	std::mt19937 rng;
-	bool active = true;
+    TimeStop timer;
+    int x0 = -1, y0 = -1;
+    dword deltaTime, nextDeltaTime;
+    dword deltaTimeFast = 20*1000;
+    int fromH, fromM, toH, toM;
+    std::mt19937 rng;
+    bool active = true;
 };
 #endif
 
